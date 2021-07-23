@@ -1,0 +1,25 @@
+version: '3'
+
+env:
+  CGO_ENABLED: 1
+
+tasks:
+  default:
+    deps:
+      - task: build64
+      - task: build32
+
+
+  build64:
+    cmds:
+      - go build -o fileWatcher64.exe
+    env:
+      GOOS: windows
+      GOARCH: amd64
+
+  build32:
+    cmds:
+      - go build -o fileWatcher32.exe
+    env:
+      GOOS: windows
+      GOARCH: 386
