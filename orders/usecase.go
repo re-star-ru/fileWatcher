@@ -1,5 +1,5 @@
 package orders
 
 type Usecase interface {
-	NewOrder(order Order)
+	NewOrder(order Order) error
 }

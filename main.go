@@ -3,6 +3,7 @@ package main
 import (
 	"fileWatcher/orders/delivery"
 	"fileWatcher/orders/usecase"
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"log"
 	"net/http"
@@ -10,15 +11,20 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func main() {
-	log.SetFlags(log.Lshortfile)
+const host = ":8080"
 
-	oUcase := usecase.New("/Sync")
+func main() {
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+
+	oUcase := usecase.New()
 	oHandler := delivery.New(oUcase)
 	r := chi.NewRouter()
 
 	r.Post("/order/new", oHandler.NewOrder)
-	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {})
+	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, "ok")
+	})
 
-	log.Println(http.ListenAndServe(":8080", r))
+	log.Println("service started at", host)
+	log.Println(http.ListenAndServe(host, r))
 }

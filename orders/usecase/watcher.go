@@ -10,10 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 )
-
-const ReportsDir = "Reports"
 
 func getFileType(typeW string) string {
 	switch typeW {
@@ -33,12 +30,11 @@ func split(r rune) bool {
 }
 
 // watch for file changes
-func watcher(workDir string) {
-	c := make(chan notify.EventInfo, 1)
-	path := filepath.Join(workDir, ReportsDir)
+func watcher(workdir string) {
 
+	c := make(chan notify.EventInfo, 1)
 	// /... is recursive
-	if err := notify.Watch(path+"/...", c, notify.Write); err != nil {
+	if err := notify.Watch(workdir+"/...", c, notify.Write); err != nil {
 		log.Fatal(err)
 	}
 	defer notify.Stop(c)
@@ -63,7 +59,7 @@ func watcher(workDir string) {
 
 const host = "https://1c.re-star.ru/sm1/hs" // todo: extract host from there!
 func addTo1c(order, fileType, fileName, fPath string) {
-	time.Sleep(time.Millisecond * 200) // sleep for wat hmm?
+	log.Printf("%s : %s : %s : %s", order, fileType, fileName, fPath)
 
 	f, err := os.ReadFile(fPath) // todo: retry?
 	if err != nil {
